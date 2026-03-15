@@ -1,7 +1,8 @@
-import { ChevronUp, ChevronDown, Clock, Eye, MessageSquare, Bookmark } from "lucide-react";
+import { Clock, Eye, Bookmark } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
+import VoteButtons from "@/components/VoteButtons";
 
 interface PostCardProps {
   post: {
@@ -92,17 +93,7 @@ const PostCard = ({ post, author }: PostCardProps) => {
         </Link>
 
         <div className="flex items-center gap-1 pt-3 border-t border-border">
-          <div className="flex items-center rounded overflow-hidden border border-border">
-            <button className="px-2 py-1 hover:bg-muted transition-colors text-muted-foreground hover:text-vote-up">
-              <ChevronUp className="w-4 h-4" />
-            </button>
-            <span className="text-[13px] font-medium text-foreground px-1 min-w-[28px] text-center">
-              {post.votes}
-            </span>
-            <button className="px-2 py-1 hover:bg-muted transition-colors text-muted-foreground hover:text-destructive">
-              <ChevronDown className="w-4 h-4" />
-            </button>
-          </div>
+          <VoteButtons type="post" targetId={post.id} votes={post.votes} />
           <div className="flex-1" />
           <button className="flex items-center gap-1 text-muted-foreground hover:text-link transition-colors px-2 py-1">
             <Bookmark className="w-3.5 h-3.5" />
