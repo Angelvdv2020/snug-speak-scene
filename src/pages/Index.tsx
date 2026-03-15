@@ -18,12 +18,12 @@ const Index = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["posts", activeHub, search, page],
     queryFn: async () => {
-      let query = supabase
-        .from("posts")
-        .select("*", { count: "exact" })
-        .eq("published", true)
-        .order("created_at", { ascending: false })
-        .range(page * POSTS_PER_PAGE, (page + 1) * POSTS_PER_PAGE - 1);
+      let query = supabase.
+      from("posts").
+      select("*", { count: "exact" }).
+      eq("published", true).
+      order("created_at", { ascending: false }).
+      range(page * POSTS_PER_PAGE, (page + 1) * POSTS_PER_PAGE - 1);
 
       if (activeHub !== "Все") {
         query = query.eq("hub", activeHub);
@@ -35,7 +35,7 @@ const Index = () => {
       const { data, error, count } = await query;
       if (error) throw error;
       return { posts: data ?? [], count: count ?? 0 };
-    },
+    }
   });
 
   const posts = data?.posts ?? [];
@@ -46,21 +46,21 @@ const Index = () => {
     queryKey: ["post-profiles", userIds.join(",")],
     queryFn: async () => {
       if (userIds.length === 0) return [];
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .in("user_id", userIds);
+      const { data, error } = await supabase.
+      from("profiles").
+      select("*").
+      in("user_id", userIds);
       if (error) throw error;
       return data;
     },
-    enabled: userIds.length > 0,
+    enabled: userIds.length > 0
   });
 
   const getProfile = (userId: string) =>
-    profiles.find((p) => p.user_id === userId);
+  profiles.find((p) => p.user_id === userId);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#6e6e6e]">
       <Helmet>
         <title>Форум — статьи и обсуждения для разработчиков</title>
         <meta name="description" content="Технический форум: статьи, обсуждения по фронтенду, бэкенду, DevOps и ML." />
@@ -70,55 +70,55 @@ const Index = () => {
 
       <div className="max-w-[820px] mx-auto px-4 py-4">
         <div className="space-y-3">
-          <HubFilter activeHub={activeHub} onSelect={(h) => { setActiveHub(h); setPage(0); }} />
+          <HubFilter activeHub={activeHub} onSelect={(h) => {setActiveHub(h);setPage(0);}} />
 
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+              onChange={(e) => {setSearch(e.target.value);setPage(0);}}
               placeholder="Поиск по заголовкам..."
-              className="pl-9 bg-card"
-            />
+              className="pl-9 bg-card" />
+            
           </div>
 
-          {isLoading && (
-            <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
+          {isLoading &&
+          <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
               Загрузка...
             </div>
+          }
+
+          {posts.map((post) =>
+          <PostCard key={post.id} post={post} author={getProfile(post.user_id)} />
           )}
 
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} author={getProfile(post.user_id)} />
-          ))}
-
-          {!isLoading && posts.length === 0 && (
-            <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
+          {!isLoading && posts.length === 0 &&
+          <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
               Нет статей{search ? ` по запросу «${search}»` : " в этом хабе"}
             </div>
-          )}
+          }
 
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-1 pt-2">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i)}
-                  className={`px-3 py-1.5 rounded text-[13px] transition-colors ${
-                    page === i
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card text-muted-foreground hover:text-foreground"
-                  }`}
-                >
+          {totalPages > 1 &&
+          <div className="flex justify-center gap-1 pt-2">
+              {Array.from({ length: totalPages }, (_, i) =>
+            <button
+              key={i}
+              onClick={() => setPage(i)}
+              className={`px-3 py-1.5 rounded text-[13px] transition-colors ${
+              page === i ?
+              "bg-primary text-primary-foreground" :
+              "bg-card text-muted-foreground hover:text-foreground"}`
+              }>
+              
                   {i + 1}
                 </button>
-              ))}
+            )}
             </div>
-          )}
+          }
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;
