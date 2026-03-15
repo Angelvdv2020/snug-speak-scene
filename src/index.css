@@ -68,6 +68,10 @@
     font-family: var(--font-body);
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
+    background-image: url('/images/bg-pattern.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
   }
   h1, h2, h3 {
     font-family: var(--font-heading);
