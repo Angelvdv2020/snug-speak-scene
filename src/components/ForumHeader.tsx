@@ -9,24 +9,24 @@ const ForumHeader = () => {
         </button>
 
         <span className="font-heading text-[22px] font-black tracking-tight cursor-pointer select-none">
-          Habr
+          ​Форум
         </span>
 
         <div className="h-5 w-px bg-header-foreground/20 hidden md:block" />
 
         <nav className="hidden md:flex items-center gap-0 text-[13px]">
-          {["Моя лента", "Все потоки"].map((item, i) => (
-            <button
-              key={item}
-              className={`px-3 py-1.5 rounded transition-colors ${
-                i === 0
-                  ? "text-header-foreground"
-                  : "text-header-foreground/60 hover:text-header-foreground"
-              }`}
-            >
+          {["Моя лента", "Все потоки"].map((item, i) =>
+          <button
+            key={item}
+            className={`px-3 py-1.5 rounded transition-colors ${
+            i === 0 ?
+            "text-header-foreground" :
+            "text-header-foreground/60 hover:text-header-foreground"}`
+            }>
+            
               {item}
             </button>
-          ))}
+          )}
         </nav>
 
         <div className="flex-1" />
@@ -47,8 +47,8 @@ const ForumHeader = () => {
           Войти
         </button>
       </div>
-    </header>
-  );
+    </header>);
+
 };
 
 export default ForumHeader;
