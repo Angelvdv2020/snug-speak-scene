@@ -10,24 +10,24 @@ const Index = () => {
   const filtered = activeHub === "Все" ? posts : posts.filter((p) => p.hub === activeHub);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#cfcfcf]">
       <ForumHeader />
 
       <div className="max-w-[820px] mx-auto px-4 py-4">
         <div className="space-y-3">
           <HubFilter activeHub={activeHub} onSelect={setActiveHub} />
-          {filtered.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-          {filtered.length === 0 && (
-            <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
+          {filtered.map((post) =>
+          <PostCard key={post.id} post={post} />
+          )}
+          {filtered.length === 0 &&
+          <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
               Нет статей в этом хабе
             </div>
-          )}
+          }
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;
