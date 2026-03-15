@@ -1,33 +1,38 @@
 import { useState } from "react";
-import { Hash, Users } from "lucide-react";
-import ChannelSidebar from "@/components/ChannelSidebar";
-import MessageList from "@/components/MessageList";
-import ChatInput from "@/components/ChatInput";
-import MemberList from "@/components/MemberList";
-import { channels } from "@/data/forumData";
+import ForumHeader from "@/components/ForumHeader";
+import PostCard from "@/components/PostCard";
+import HubFilter from "@/components/HubFilter";
+import ForumSidebar from "@/components/ForumSidebar";
+import { posts } from "@/data/forumData";
 
 const Index = () => {
-  const [activeChannel, setActiveChannel] = useState("general");
-  const channel = channels.find((c) => c.id === activeChannel);
+  const [activeHub, setActiveHub] = useState("Все");
+
+  const filtered = activeHub === "Все" ? posts : posts.filter((p) => p.hub === activeHub);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <ChannelSidebar activeChannel={activeChannel} onChannelSelect={setActiveChannel} />
+    <div className="min-h-screen bg-background">
+      <ForumHeader />
 
-      <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-12 shrink-0 border-b border-border flex items-center px-4 gap-3">
-          <Hash className="w-4 h-4 text-muted-foreground" />
-          <h2 className="font-display text-sm font-semibold">{channel?.name}</h2>
-          <div className="ml-auto">
-            <Users className="w-4 h-4 text-muted-foreground" />
+      <div className="max-w-[1100px] mx-auto px-4 py-5">
+        <div className="flex gap-5">
+          {/* Main feed */}
+          <div className="flex-1 min-w-0 space-y-4">
+            <HubFilter activeHub={activeHub} onSelect={setActiveHub} />
+            {filtered.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+            {filtered.length === 0 && (
+              <div className="bg-card rounded-lg border border-border p-8 text-center text-muted-foreground">
+                Нет статей в этом хабе
+              </div>
+            )}
           </div>
-        </header>
 
-        <MessageList channelId={activeChannel} />
-        <ChatInput channelName={channel?.name || ""} />
-      </main>
-
-      <MemberList />
+          {/* Sidebar */}
+          <ForumSidebar />
+        </div>
+      </div>
     </div>
   );
 };
