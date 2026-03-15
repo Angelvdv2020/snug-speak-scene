@@ -29,25 +29,25 @@ const Auth = () => {
 
     if (isLogin) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(error.message);
-      else navigate("/");
+      if (error) setError(error.message);else
+      navigate("/");
     } else {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { username: username || email.split("@")[0] },
-          emailRedirectTo: window.location.origin,
-        },
+          emailRedirectTo: window.location.origin
+        }
       });
-      if (error) setError(error.message);
-      else setMessage("Проверьте почту для подтверждения регистрации");
+      if (error) setError(error.message);else
+      setMessage("Проверьте почту для подтверждения регистрации");
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-300">
       <div className="w-full max-w-[400px]">
         <div className="bg-card rounded-lg p-8 shadow-sm border border-border">
           <h1 className="font-heading text-[24px] font-bold text-foreground mb-6 text-center">
@@ -55,18 +55,18 @@ const Auth = () => {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <div>
+            {!isLogin &&
+            <div>
                 <label className="text-[13px] text-muted-foreground mb-1 block">
                   Имя пользователя
                 </label>
                 <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="username"
-                />
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="username" />
+              
               </div>
-            )}
+            }
 
             <div>
               <label className="text-[13px] text-muted-foreground mb-1 block">Email</label>
@@ -75,8 +75,8 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                required
-              />
+                required />
+              
             </div>
 
             <div>
@@ -87,16 +87,16 @@ const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                minLength={6}
-              />
+                minLength={6} />
+              
             </div>
 
-            {error && (
-              <p className="text-destructive text-[13px]">{error}</p>
-            )}
-            {message && (
-              <p className="text-accent text-[13px]">{message}</p>
-            )}
+            {error &&
+            <p className="text-destructive text-[13px]">{error}</p>
+            }
+            {message &&
+            <p className="text-accent text-[13px]">{message}</p>
+            }
 
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Загрузка..." : isLogin ? "Войти" : "Зарегистрироваться"}
@@ -105,16 +105,16 @@ const Auth = () => {
 
           <div className="mt-4 text-center">
             <button
-              onClick={() => { setIsLogin(!isLogin); setError(""); setMessage(""); }}
-              className="text-[13px] text-link hover:underline"
-            >
+              onClick={() => {setIsLogin(!isLogin);setError("");setMessage("");}}
+              className="text-[13px] text-link hover:underline">
+              
               {isLogin ? "Нет аккаунта? Зарегистрироваться" : "Уже есть аккаунт? Войти"}
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default Auth;
