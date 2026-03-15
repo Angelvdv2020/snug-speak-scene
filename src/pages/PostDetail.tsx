@@ -1,14 +1,18 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import ForumHeader from "@/components/ForumHeader";
-import { ChevronUp, ChevronDown, Clock, Eye, ArrowLeft } from "lucide-react";
+import VoteButtons from "@/components/VoteButtons";
+import { Clock, Eye, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import CommentSection from "@/components/CommentSection";
+import { useEffect, useRef } from "react";
 
 const PostDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const viewIncremented = useRef(false);
 
   const { data: post, isLoading } = useQuery({
     queryKey: ["post", id],
@@ -23,6 +27,14 @@ const PostDetail = () => {
     },
     enabled: !!id,
   });
+
+  // Increment views once
+  useEffect(() => {
+    if (id && !viewIncremented.current) {
+      viewIncremented.current = true;
+      supabase.rpc("increment_post_views", { post_id: id });
+    }
+  }, [id]);
 
   const { data: author } = useQuery({
     queryKey: ["profile", post?.user_id],
@@ -64,6 +76,11 @@ const PostDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{post.title} — Форум</title>
+        <meta name="description" content={post.preview.slice(0, 155)} />
+      </Helmet>
+
       <ForumHeader />
       <div className="max-w-[820px] mx-auto px-4 py-4">
         <Link to="/" className="inline-flex items-center gap-1 text-[13px] text-link hover:underline mb-4">
@@ -73,9 +90,7 @@ const PostDetail = () => {
 
         <article className="bg-card rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold bg-muted text-muted-foreground"
-            >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold bg-muted text-muted-foreground">
               {author?.username?.slice(0, 2).toUpperCase() || "??"}
             </div>
             <div>
@@ -107,15 +122,7 @@ const PostDetail = () => {
           </div>
 
           <div className="flex items-center gap-2 mt-6 pt-4 border-t border-border">
-            <div className="flex items-center rounded overflow-hidden border border-border">
-              <button className="px-2 py-1 hover:bg-muted transition-colors text-muted-foreground hover:text-vote-up">
-                <ChevronUp className="w-4 h-4" />
-              </button>
-              <span className="text-[13px] font-medium px-1 min-w-[28px] text-center">{post.votes}</span>
-              <button className="px-2 py-1 hover:bg-muted transition-colors text-muted-foreground hover:text-destructive">
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
+            <VoteButtons type="post" targetId={post.id} votes={post.votes} />
           </div>
         </article>
 

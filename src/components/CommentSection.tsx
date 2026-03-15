@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import VoteButtons from "@/components/VoteButtons";
 
 interface CommentSectionProps {
   postId: string;
@@ -49,7 +50,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
       const { error } = await supabase.from("comments").insert({
         post_id: postId,
         user_id: user!.id,
-        content: text,
+        content: text.trim(),
       });
       if (error) throw error;
     },
@@ -76,6 +77,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
               onChange={(e) => setText(e.target.value)}
               placeholder="Написать комментарий..."
               className="mb-2"
+              maxLength={5000}
             />
             <Button
               size="sm"
@@ -105,7 +107,8 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
                     {format(new Date(comment.created_at), "d MMM в HH:mm", { locale: ru })}
                   </span>
                 </div>
-                <p className="text-[14px] text-foreground/85 leading-relaxed">{comment.content}</p>
+                <p className="text-[14px] text-foreground/85 leading-relaxed mb-2">{comment.content}</p>
+                <VoteButtons type="comment" targetId={comment.id} votes={comment.votes} />
               </div>
             );
           })}
