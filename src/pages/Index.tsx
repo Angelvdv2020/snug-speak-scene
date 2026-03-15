@@ -60,7 +60,7 @@ const Index = () => {
     profiles.find((p) => p.user_id === userId);
 
   return (
-    <div className="min-h-screen bg-neutral-300">
+    <div className="min-h-screen">
       <Helmet>
         <title>Форум — статьи и обсуждения для разработчиков</title>
         <meta name="description" content="Технический форум: статьи, обсуждения по фронтенду, бэкенду, DevOps и ML." />
