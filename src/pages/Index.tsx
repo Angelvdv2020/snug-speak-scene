@@ -93,7 +93,7 @@ const Index = () => {
           )}
 
           {!isLoading && posts.length === 0 &&
-          <div className="bg-card rounded-lg p-10 text-center text-muted-foreground text-sm">
+          <div className="rounded-lg p-10 text-center text-muted-foreground text-sm bg-white font-serif">
               Нет статей{search ? ` по запросу «${search}»` : " в этом хабе"}
             </div>
           }
