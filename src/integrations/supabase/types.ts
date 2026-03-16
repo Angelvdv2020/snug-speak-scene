@@ -216,6 +216,15 @@ export type Database = {
         Returns: boolean
       }
       increment_post_views: { Args: { post_id: string }; Returns: undefined }
+      toggle_vote: {
+        Args: {
+          p_target_id: string
+          p_target_type: string
+          p_user_id: string
+          p_value: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

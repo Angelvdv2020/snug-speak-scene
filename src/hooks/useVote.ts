@@ -26,41 +26,13 @@ export function useVote(type: "post" | "comment", targetId: string) {
   const vote = useMutation({
     mutationFn: async (value: 1 | -1) => {
       if (!user) throw new Error("Not authenticated");
-      const col = type === "post" ? "post_id" : "comment_id";
-
-      if (userVote) {
-        if (userVote.value === value) {
-          // Remove vote
-          await supabase.from("votes").delete().eq("id", userVote.id);
-          // Update target score
-          const table = type === "post" ? "posts" : "comments";
-          const { data: target } = await supabase.from(table).select("votes").eq("id", targetId).single();
-          if (target) {
-            await supabase.from(table).update({ votes: target.votes - value }).eq("id", targetId);
-          }
-        } else {
-          // Change vote
-          await supabase.from("votes").update({ value }).eq("id", userVote.id);
-          const table = type === "post" ? "posts" : "comments";
-          const { data: target } = await supabase.from(table).select("votes").eq("id", targetId).single();
-          if (target) {
-            await supabase.from(table).update({ votes: target.votes + value * 2 }).eq("id", targetId);
-          }
-        }
-      } else {
-        // New vote
-        const insertData: Record<string, unknown> = {
-          user_id: user.id,
-          value,
-          [col]: targetId,
-        };
-        await supabase.from("votes").insert(insertData as any);
-        const table = type === "post" ? "posts" : "comments";
-        const { data: target } = await supabase.from(table).select("votes").eq("id", targetId).single();
-        if (target) {
-          await supabase.from(table).update({ votes: target.votes + value }).eq("id", targetId);
-        }
-      }
+      const { error } = await supabase.rpc("toggle_vote", {
+        p_user_id: user.id,
+        p_target_type: type,
+        p_target_id: targetId,
+        p_value: value,
+      });
+      if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: key });
