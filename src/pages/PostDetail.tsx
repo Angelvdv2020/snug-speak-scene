@@ -31,8 +31,12 @@ const PostDetail = () => {
   // Increment views once
   useEffect(() => {
     if (id && !viewIncremented.current) {
-      viewIncremented.current = true;
-      supabase.rpc("increment_post_views", { post_id: id });
+      const key = `viewed_${id}`;
+      if (!sessionStorage.getItem(key)) {
+        viewIncremented.current = true;
+        sessionStorage.setItem(key, "1");
+        supabase.rpc("increment_post_views", { post_id: id });
+      }
     }
   }, [id]);
 
