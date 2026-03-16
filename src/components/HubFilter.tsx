@@ -1,5 +1,4 @@
 import { hubs } from "@/data/forumData";
-import { Settings2 } from "lucide-react";
 
 interface HubFilterProps {
   activeHub: string;
@@ -9,14 +8,10 @@ interface HubFilterProps {
 const HubFilter = ({ activeHub, onSelect }: HubFilterProps) => {
   return (
     <div className="bg-card rounded-lg px-5 py-3">
-      <div className="flex items-center justify-between">
-        <h2 className="font-heading text-[18px] font-bold text-foreground">Моя лента</h2>
-        <button className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 text-[13px]">
-          <Settings2 className="w-3.5 h-3.5" />
-          Настройки
-        </button>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="font-heading text-[18px] font-bold text-foreground">Форум</h2>
       </div>
-      <div className="flex flex-wrap gap-0.5 mt-2">
+      <div className="flex flex-wrap gap-0.5">
         {hubs.map((hub) => (
           <button
             key={hub}
