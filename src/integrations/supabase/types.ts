@@ -66,6 +66,7 @@ export type Database = {
           difficulty: string
           hub: string
           id: string
+          image_url: string | null
           preview: string
           published: boolean
           read_time: number
@@ -82,6 +83,7 @@ export type Database = {
           difficulty?: string
           hub: string
           id?: string
+          image_url?: string | null
           preview: string
           published?: boolean
           read_time?: number
@@ -98,6 +100,7 @@ export type Database = {
           difficulty?: string
           hub?: string
           id?: string
+          image_url?: string | null
           preview?: string
           published?: boolean
           read_time?: number
